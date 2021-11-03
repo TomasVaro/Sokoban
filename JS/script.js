@@ -10,11 +10,6 @@ function drawMap(tileMap)
                 img.src = 'img/Wall.jpg';
                 document.getElementById(x + "," + y).appendChild(img);
 
-                // var src = document.getElementById(x + "," + y);
-                // var img = document.createElement("img");
-                // img.src = "img/"+this.apparel+"/"+this.facing+"Wall.jpg";
-                // src.appendChild(img);
-
                 // document.getElementById(x + "," + y).innerHTML = "WWW";
             }
             else if(tileMap.mapGrid[x][y] == "B")
@@ -51,8 +46,6 @@ function drawMap(tileMap)
             }
             console.log("x:" + x + " y:" + y);
             console.log(tileMap.mapGrid[x][y]);
-            // document.getElementById(x + "," + y).innerHTML = "Hej";
-
         }
     }
 }
