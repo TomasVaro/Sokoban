@@ -1,6 +1,7 @@
 let isGoal = false;
 let keppPlaying = true;
 drawMap(tileMap01);
+checkIfFinished();
 function drawMap(tileMap)
 {
     for(let x = 0; x < tileMap.height; x++)
@@ -40,32 +41,6 @@ function placeImage(x, y, image)
     document.getElementById(x + "," + y).appendChild(img);
 }
 
-window.addEventListener("keydown", function(event) {
-    
-    if (event.defaultPrevented) {
-      return;
-    }
-    if (event.code === "ArrowDown"){
-        xComp = 1;
-        yComp = 0;
-        move(xComp, yComp);
-    } else if (event.code === "ArrowUp"){
-        xComp = -1;
-        yComp = 0;
-        move(xComp, yComp);
-    } else if (event.code === "ArrowLeft"){
-        xComp = 0;
-        yComp = -1;
-        move(xComp, yComp);
-    } else if (event.code === "ArrowRight"){
-        xComp = 0;
-        yComp = 1;
-        move(xComp, yComp);
-    }
-    event.preventDefault();
-    }, true);
-
-
 function move(xComp, yComp)
 {
     let once = true;
@@ -75,7 +50,6 @@ function move(xComp, yComp)
         {
             if(tileMap01.mapGrid[x][y] == "P" && tileMap01.mapGrid[x+xComp][y+yComp] != "W" && once)
             {
-                // debugger;
                 if((tileMap01.mapGrid[x+xComp][y+yComp] == "B"
                 || tileMap01.mapGrid[x+xComp][y+yComp] == "BG")
                 && (tileMap01.mapGrid[x+xComp+xComp][y+yComp+yComp] == "W"
@@ -206,4 +180,62 @@ function placeBlockInGoal(x, y, xComp, yComp)
     document.getElementById((x+xComp+xComp) + "," + (y+yComp+yComp)).children[0].replaceWith(imgBlock);    
     tileMap01.mapGrid[x+xComp+xComp][y+yComp+yComp] = ["BG"];
     isGoal = false;   
+}
+
+function checkIfFinished()
+{
+    let counter = 0;
+    let xP = 0;
+    let yP = 0;
+    for(let x = 0; x < tileMap01.height; x++)
+    {
+        for(let y = 0; y < tileMap01.width; y++)
+        {
+            if(tileMap01.mapGrid[x][y] == "P")
+            {
+                xP = x;
+                yP = y;
+            }
+            if(tileMap01.mapGrid[x][y] == "G")
+            {
+                counter++;
+            }
+        }
+    }
+    if(counter == 0)
+    {
+        tileMap01.mapGrid[xP-1][yP] = "W"
+        tileMap01.mapGrid[xP+1][yP] = "W"
+        tileMap01.mapGrid[xP][yP-1] = "W"
+        alert("Game over!");
+    }
+    else
+    {
+        let xComp;
+        let yComp;        
+        document.onkeydown = function (e) {
+            switch (e.key) {
+                case 'ArrowUp':
+                    xComp = -1;
+                    yComp = 0;
+                    move(xComp, yComp)
+                    break;
+                case 'ArrowDown':
+                    xComp = 1;
+                    yComp = 0;
+                    move(xComp, yComp)
+                    break;
+                case 'ArrowLeft':
+                    xComp = 0;
+                    yComp = -1;
+                    move(xComp, yComp)
+                    break;
+                case 'ArrowRight':
+                    xComp = 0;
+                    yComp = 1;
+                    move(xComp, yComp)
+            }
+            checkIfFinished();
+        };
+    }
 }
