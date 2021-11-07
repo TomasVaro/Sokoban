@@ -1,5 +1,6 @@
 let isGoal = false;
 let keppPlaying = true;
+let timer = true;
 drawMap(tileMap01);
 checkIfFinished();
 function drawMap(tileMap)
@@ -33,12 +34,39 @@ function drawMap(tileMap)
             console.log(tileMap.mapGrid[x][y]);
         }
     }
+    startTimer();
 }
 function placeImage(x, y, image)
 {    
     let img = document.createElement('img');
     img.src = 'img/' + image;
     document.getElementById(x + "," + y).appendChild(img);
+}
+
+function startTimer()
+{
+    var minutesLabel = document.getElementById("minutes");
+    var secondsLabel = document.getElementById("seconds");
+    var totalSeconds = 0;
+    setInterval(setTime, 1000);
+
+    function setTime() {
+        if(timer)
+        {
+            ++totalSeconds;
+        }        
+        secondsLabel.innerHTML = pad(totalSeconds % 60);
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+        }
+}
+
+function pad(val) {
+  var valString = val + "";
+  if (valString.length < 2) {
+    return "0" + valString;
+  } else {
+    return valString;
+  }
 }
 
 function move(xComp, yComp)
@@ -164,7 +192,6 @@ function movePlayer(x, y, xComp, yComp)
     imgPlayer.src = 'img/Player.jpg';
     document.getElementById((x + xComp) + "," + (y + yComp)).children[0].replaceWith(imgPlayer);
     tileMap01.mapGrid[x+xComp][y+yComp] = ["P"];
-    //once = false;
 }
 function moveBlock(x, y, xComp, yComp)
 {
@@ -204,16 +231,17 @@ function checkIfFinished()
     }
     if(counter == 0)
     {
-        tileMap01.mapGrid[xP-1][yP] = "W"
-        tileMap01.mapGrid[xP+1][yP] = "W"
-        tileMap01.mapGrid[xP][yP-1] = "W"
-        alert("Game over!");
+        tileMap01.mapGrid[xP-1][yP] = "W";
+        tileMap01.mapGrid[xP+1][yP] = "W";
+        tileMap01.mapGrid[xP][yP-1] = "W";
+        timer = false;
     }
     else
     {
         let xComp;
-        let yComp;        
+        let yComp;
         document.onkeydown = function (e) {
+            e.preventDefault;
             switch (e.key) {
                 case 'ArrowUp':
                     xComp = -1;
@@ -238,4 +266,9 @@ function checkIfFinished()
             checkIfFinished();
         };
     }
+}
+
+function restart()
+{
+    location.reload();
 }
