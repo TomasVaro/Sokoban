@@ -27,6 +27,9 @@ button{
     cursor: pointer;
     border-radius: 20px;
 }
+#message{
+    padding-right: 8px;
+}
 .timer{
     display: flex;
     align-items:center;

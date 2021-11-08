@@ -1,8 +1,10 @@
 let isGoal = false;
 let keppPlaying = true;
 let timer = true;
+let blocksAtStart = 0;
+document.getElementById("message").style.display = "none";
 drawMap(tileMap01);
-checkIfFinished();
+checkIfFinished(blocksAtStart);
 function drawMap(tileMap)
 {
     for(let x = 0; x < tileMap.height; x++)
@@ -16,6 +18,7 @@ function drawMap(tileMap)
             else if(tileMap.mapGrid[x][y] == "B")
             {
                 placeImage(x, y, 'Block.jpg');
+                blocksAtStart++;
             }
             else if(tileMap.mapGrid[x][y] == "G")
             {
@@ -87,6 +90,7 @@ function move(xComp, yComp)
                     break;
                 }
                 
+                // debugger;
                 //Move a Block
                 if(tileMap01.mapGrid[x+xComp][y+yComp] == "B" 
                 || tileMap01.mapGrid[x+xComp][y+yComp] == "BG"
@@ -127,11 +131,11 @@ function move(xComp, yComp)
                         once = false;
                     }
                 }
-
                 //Only move Player
                 else if(tileMap01.mapGrid[x+xComp][y+yComp] == " "
                 && tileMap01.mapGrid[x-1][y] != "G" && tileMap01.mapGrid[x-1][y] != "BG"
-                && tileMap01.mapGrid[x+1][y] != "G" && tileMap01.mapGrid[x+1][y] != "BG")
+                && tileMap01.mapGrid[x+1][y] != "G" && tileMap01.mapGrid[x+1][y] != "BG"
+                || tileMap01.mapGrid[x][y-1] == "B" && tileMap01.mapGrid[x][y+2] == "G")
                 {
                     movePlayer(x, y, xComp, yComp);
                     placeBackground(x, y, xComp, yComp);
@@ -148,7 +152,10 @@ function move(xComp, yComp)
                     if(isGoal 
                         || tileMap01.mapGrid[x][y+1] == "BG"
                         || tileMap01.mapGrid[x][y+1] == "W"
-                        || tileMap01.mapGrid[x][y-1] != " ")
+                        || tileMap01.mapGrid[x][y+2] == "W"
+                        || tileMap01.mapGrid[x][y-1] != " "
+                        || tileMap01.mapGrid[x-1][y] == "G"
+                        || tileMap01.mapGrid[x-1][y] == "BG")
                     {
                         placeGoal(x, y, xComp, yComp);
                     }
@@ -209,7 +216,7 @@ function placeBlockInGoal(x, y, xComp, yComp)
     isGoal = false;   
 }
 
-function checkIfFinished()
+function checkIfFinished(blocksAtStart)
 {
     let counter = 0;
     let xP = 0;
@@ -223,17 +230,18 @@ function checkIfFinished()
                 xP = x;
                 yP = y;
             }
-            if(tileMap01.mapGrid[x][y] == "G")
+            if(tileMap01.mapGrid[x][y] == "BG")
             {
                 counter++;
             }
         }
     }
-    if(counter == 0)
+    if(counter == blocksAtStart)
     {
         tileMap01.mapGrid[xP-1][yP] = "W";
         tileMap01.mapGrid[xP+1][yP] = "W";
         tileMap01.mapGrid[xP][yP-1] = "W";
+        document.getElementById("message").style.display = "";
         timer = false;
     }
     else
@@ -263,7 +271,7 @@ function checkIfFinished()
                     yComp = 1;
                     move(xComp, yComp)
             }
-            checkIfFinished();
+            checkIfFinished(blocksAtStart);
         };
     }
 }
