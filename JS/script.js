@@ -249,7 +249,7 @@ function checkIfFinished(blocksAtStart)
         let xComp;
         let yComp;
         document.onkeydown = function (e) {
-            e.preventDefault;
+            e.preventDefault();
             switch (e.key) {
                 case 'ArrowUp':
                     xComp = -1;
